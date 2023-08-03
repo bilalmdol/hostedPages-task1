@@ -4,13 +4,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Server Page</title>
+    <title>Ocrolus</title>
+
+    <style>
+        .nav-wrapper {
+            background-color: rgb(23, 23, 23);
+            width: 100%;
+            max-width: 100%;
+            margin-bottom: 3rem;
+        }
+
+        .list-wrapper li {
+            font-size: larger;
+            color: antiquewhite;
+            margin-right: 1.5rem;
+        }
+    </style>
 </head>
 
 <body>
-
+    <div class="nav-wrapper">
+        <nav class="navbar" style="display: flex;justify-content: space-between;">
+            <h3 style="color: antiquewhite;margin-left: 1.5rem;">OCRULUS</h3>
+            <ul class="list-wrapper"
+                style="display: flex;justify-content: space-between;list-style: none;margin-right: 2rem;">
+                <li>Home</li>
+                <li>Billing</li>
+                <li>Revenue</li>
+                <li>Support</li>
+            </ul>
+        </nav>
+    </div>
     <center>
-        <h1>Some client's website</h1>
         <!-- iframe that renders react registeration page -->
         <iframe src="http://localhost:5100/signup" height="650px" width="600px" frameBorder="0">
         </iframe>

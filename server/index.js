@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const mysql = require("mysql2");
+const bcrypt = require("bcrypt")
 
 //PORT to be used by server
 const PORT = 5001
@@ -23,28 +23,26 @@ app.get('/', (req, res) => {
 });
 
 // signup data POST route
-app.post('/signup', (req, res) => {
+app.post('/signup', async(req, res) => {
+
     console.log(req.body)
-    res.send(req.body)
 
     // objct destructuring
     const { firstName, lastName, email, password, gender, dob, phone, address, city, zip, country } = req.body;
 
-    const sqlInsert = "INSERT INTO users VALUES (0,?,?,?,?,?,?,?,?,?,?,?)"
-    const formattedDob = new Date(dob);
+    const encrypted_password = await bcrypt.hash(password, 10);
+    conn.query('INSERT INTO users (firstName, lastName, email, password, gender, dob, phone, address, city, zip, country) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *', [firstName, lastName, email, encrypted_password, gender, dob, phone, address, city, zip, country],
+        (error, results) => {
+            if (error) {
+                throw error
+            }
+            console.log("Results:")
+            console.log(results)
+            res.send(`Hello ${results.rows[0].firstname}`)
+        })
 
-    //formatting inputs
-    const insert_query = mysql.format(sqlInsert, [firstName, lastName, email, password, gender, formattedDob, phone, address, city, zip, country])
-    
-    console.log("insert query", insert_query)
-    // pushing request data in database
-    conn.query(insert_query, function (err, result) {
-        if (err) return res.status(500);
-        console.log("Added!");
-        console.log(result);
-        return res.status(201);
-    });
-    
+        conn.end()
+
 });
 
 
@@ -53,35 +51,25 @@ app.post('/getusers', (req, res) => {
     console.log(req.body)
     res.send(req.body)
 
-    const sql = 'SELECT * FROM users';
-    // pushing request data in database
-    conn.query(sql, function (err, result) {
-        if (err){
-            console.log(err)
-             throw err;
+    conn.query('SELECT * FROM "users"', (error, results) => {
+        if (error) {
+            throw error
         }
-        console.log("Result:");
-        console.log(result);
-        res.sendStatus(200)
-    });
+        console.log("Result:")
+        console.log(results)
+    })
 
 });
 
+
 // Server Port listening
-app.listen(PORT, async() => {
+app.listen(PORT, async () => {
     console.log(`Server is running on port ${PORT}`)
 
     //connecting to database
-    console.log("connecting to database...")
-    conn.connect(function (err) {
-        if (err) throw err;
-        console.log("Connected!")
-        const res =  conn.query('SELECT * FROM users')
-        console.log(res)
+    console.log("connecting to Database..")
+    console.log("Connected!")
 
-    });
-
-    
 });
 
 

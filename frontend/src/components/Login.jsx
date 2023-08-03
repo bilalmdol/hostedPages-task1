@@ -1,12 +1,12 @@
-import {useLocation} from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
-const Login=()=>{
+const Login = () => {
 
-    const location =  useLocation();
+    const location = useLocation();
 
-    return(
+    return (
         <>
-            <h1>Hello {location.state.user}</h1>
+            <h1>{location.state.msg}</h1>
         </>
     )
 };

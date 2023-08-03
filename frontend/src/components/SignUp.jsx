@@ -11,11 +11,12 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio"
 import axios from "axios";
+import Navbar from "./Navbar";
 
 const SignUp = () => {
 
     const navigate = useNavigate();
-    
+
     //using useState hook to store input textField values
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
@@ -30,6 +31,8 @@ const SignUp = () => {
     const [country, setCountry] = useState("");
     const [dob, setDob] = useState(new Date());
     const [save, setSave] = useState(false);
+    const [msg, setMsg] = useState("User");
+
 
     //handling date change
     const handleDateChange = (date) => {
@@ -59,9 +62,8 @@ const SignUp = () => {
                 console.log("Successfully Posted!", res)
                 if (res.status == 200) {
                     setSave(true);
+                    setMsg(res.data + "!")
                     alert(firstName + " you have signed up!")
-                    //refeshing form
-                    // location.reload();
                 }
                 else {
                     console.log("Something went wrong :(")
@@ -71,18 +73,15 @@ const SignUp = () => {
     }
 
     const handleLogin = () => {
-        navigate("/login", { state: { user: firstName } })
+        navigate("/login", { state: { msg: msg } })
 
     }
-    
+
     return (
-
-
         <>
-
-            <Container maxWidth={"sm"}>
-
-                <h2>Ordway's Registeration Form!</h2>
+            <Navbar />
+            <Container maxWidth={"sm"} style={{ "marginTop": "2rem" }}>
+                {/* <h2>Ordway's Registeration Form!</h2> */}
 
                 <Stack spacing={3} >
                     <TextField id="fname" label="First Name" variant='outlined' onChange={(e) => { setFirstName(e.target.value) }} />
@@ -91,12 +90,12 @@ const SignUp = () => {
                     <TextField id="password" label="Password" type="password" variant='outlined' onChange={(e) => { setPassword(e.target.value) }} />
                     <RadioGroup defaultValue="Male" name="gender-buttons-group" onChange={(e) => { setGender(e.target.value) }} >
                         <Stack direction={"col"} spacing={"5"}>
-                            <h4 style={{"fontWeight":"lighter"}}>Gender</h4>
+                            <h4 style={{ "fontWeight": "lighter" }}>Gender</h4>
                             <FormControlLabel value="Male" control={<Radio />} label="Male" />
                             <FormControlLabel value="Female" control={<Radio />} label="Female" />
                             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                 <KeyboardDatePicker
-                                    style={{"marginLeft":"2rem"}}
+                                    style={{ "marginLeft": "2rem" }}
                                     disableToolbar
                                     variant="inline"
                                     format="MM/dd/yyyy"
@@ -119,10 +118,10 @@ const SignUp = () => {
                     <TextField id="city" label="City" variant='outlined' onChange={(e) => { setCity(e.target.value) }} />
                     <TextField id="zip" label="Zip" variant='outlined' onChange={(e) => { setZip(e.target.value) }} />
                     <TextField id="country" label="Country" variant='outlined' onChange={(e) => { setCountry(e.target.value) }} />
-                    
-                    {(save)?
-                    <Button variant="contained" style={{ backgroundColor: "rgb(255, 155, 0)", width: "100px" }} onClick={handleLogin}>login</Button>
-                    :<Button variant="contained" style={{ backgroundColor: "#1976d2", width: "100px" }} onClick={handleSignUp}>sign up</Button>
+
+                    {(save) ?
+                        <Button variant="contained" style={{ backgroundColor: "rgb(255, 155, 0)", width: "100px" }} onClick={handleLogin}>login</Button>
+                        : <Button variant="contained" style={{ backgroundColor: "#1976d2", width: "100px" }} onClick={handleSignUp}>sign up</Button>
 
                     }
                 </Stack>
